@@ -38,14 +38,15 @@ public class GameLoader {
 		final var attack = Integer.parseInt(lines[3]);
 		final var speed = Integer.parseInt(lines[4]);
 		final var speedDamage = Integer.parseInt(lines[5]);
-		return new Monster(name, health, attack, speed, speedDamage);
+		final var duplicable = Boolean.parseBoolean(lines[6]);
+		return new Monster(name, health, attack, speed, speedDamage, duplicable);
 	}
 
 	private Item parseItem(String[] lines) {
-		final var name = lines[6].trim();
-		final var health = Integer.parseInt(lines[7]);
-		final var attack = Integer.parseInt(lines[8]);
-		final var speed = Integer.parseInt(lines[9]);
+		final var name = lines[7].trim();
+		final var health = Integer.parseInt(lines[8]);
+		final var attack = Integer.parseInt(lines[9]);
+		final var speed = Integer.parseInt(lines[10]);
 		return new Item(name, health, attack, speed);
 	}
 }

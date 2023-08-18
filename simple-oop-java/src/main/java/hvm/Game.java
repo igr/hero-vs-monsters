@@ -1,10 +1,12 @@
 package hvm;
 
-import hvm.tv.ConsoleTv;
 import hvm.tv.Television;
 
 import java.util.List;
 
+/**
+ * The main game logic.
+ */
 public final class Game {
 	private final Hero hero;
 	private final List<Room> rooms;
@@ -16,38 +18,73 @@ public final class Game {
 		this.rooms = rooms;
 		this.tv = tv;
 	}
+
+	/**
+	 * The main game loop.
+	 */
 	public void play() {
+		// we need to iterate over rooms
 		for (Room room : rooms) {
-			tv.show("Hero " + hero.getName() + " enters " + room.getName());
+			tv.show("Hero " + hero.getName() + " enters " + room.name());
 
-			final var monster = room.getMonster();
-			Monster monsterDuplicate = null;
+			final var monsters = room.monsters();
 
-			while (monster.isAlive()) {
-
-				final var roar = monster.roar();
-				tv.show("Monster " + monster.getName() + " roars " + roar);
-
-				tv.show("Hero " + hero.getName() + " fights " + monster.getName());
-				hero.fight(monster);
-
-				if (!hero.isAlive()) {
-					tv.show("Hero " + hero.getName() + " is dead");
+			// iterate over all alive monsters in the room
+			while (true) {
+				if (hero.isDead()) {
 					return;
 				}
 
-				if (!monster.isAlive()) {
-					tv.show("Monster " + monster.getName() + " is dead");
+				var allMonstersAlive = monsters
+						.stream()
+						.map(Monster::isAlive)
+						.reduce(Boolean::logicalOr)
+						.orElse(false);
 
-					final var item = room.getItem();
-					tv.show("Hero " + hero.getName() + " founds " + item.name());
+				if (!allMonstersAlive) {
+					break;
+				}
 
-					hero.apply(item);
+				monsters.stream()
+						.filter(Monster::isAlive)
+						.forEach(this::fightMonster);
+
+				final var clonedMonsters = new MonsterCloner(monsters).spawnClonedMonsters();
+				if (!clonedMonsters.isEmpty()) {
+					tv.show("Monsters cloned!");
+					monsters.addAll(clonedMonsters);
 				}
 			}
+
+			final var item = room.item();
+			tv.show("Hero " + hero.getName() + " founds " + item.name());
+
+			hero.useItem(item);
 		}
 
 		tv.show("Hero " + hero.getName() + " wins!");
+	}
+
+	/**
+	 * Fighting monsters.
+	 * How to be sure that method belongs here? Should we move it to Hero class?
+	 */
+	private void fightMonster(final Monster monster) {
+		if (hero.isDead()) {
+			return;
+		}
+		final var roar = monster.roar();
+		tv.show("Monster " + monster.getName() + " attacks: " + roar);
+
+		tv.show("Hero " + hero.getName() + " fights " + monster.getName());
+		hero.fight(monster);
+
+		if (hero.isDead()) {
+			tv.show("Hero " + hero.getName() + " is dead");
+		}
+		if (monster.isDead()) {
+			tv.show("Monster " + monster.getName() + " is dead");
+		}
 	}
 
 }
