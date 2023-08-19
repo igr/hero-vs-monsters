@@ -1,7 +1,7 @@
 package hvm;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Encapsulates the logic of cloning monsters.
@@ -18,7 +18,8 @@ public class MonsterCloner {
 		return monsters.stream()
 				.filter(GameCharacter::isAlive)
 				.map(Monster::spawnClone)
-				.filter(Objects::nonNull)
+				.filter(Optional::isPresent)
+				.map(Optional::get)
 				.toList();
 
 	}
