@@ -8,7 +8,8 @@ Please add as many comments as possible to your code, so that it is easy to unde
 
 ## Implementations
 
-TBA
++ [Procedural Programming, Kotlin](pp-kotlin/README.md)
++ [Object Oriented Programming, Java](simple-oop-java/README.md)
 
 ## 🤴⚔️😈 The problem
 

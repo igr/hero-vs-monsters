@@ -104,4 +104,3 @@ private fun cloneMonsterIfPossible(monster: Monster): List<Monster> {
 		monster.copy(name = CharacterName("${monster.name.value} clone"), health = monster.health / 2)
 	)
 }
-

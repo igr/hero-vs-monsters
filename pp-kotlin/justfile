@@ -1,0 +1,12 @@
+
+# just displays the receipes
+default:
+    @just --list
+
+# cleans all
+clean:
+    ./gradlew clean
+
+# runs the application
+run:
+    ./gradlew run
