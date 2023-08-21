@@ -1,4 +1,4 @@
-# Heros vs Monsters
+# Hero vs Monsters
 
 This repository contains the list of different implementations of the same problem, described below. The purpose is to present different programming styles, languages, methodologies, patterns... and to compare them.
 
