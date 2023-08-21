@@ -1,0 +1,7 @@
+plugins {
+    id 'hvm.kotlin-library-conventions'
+}
+
+dependencies {
+    api(project(':hvm-tv:hvm-tv-api'))
+}
