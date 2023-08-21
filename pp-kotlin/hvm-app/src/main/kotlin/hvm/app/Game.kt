@@ -2,24 +2,30 @@ package hvm.app
 
 import hvm.app.Event.*
 
+/**
+ * The main function that executes the game and returns the list of events that happened during the game.
+ */
 fun play(game: Game): List<Event> {
+	val events = mutableListOf<Event>()
+
 	var hero: Hero = game.hero
-	val roomEvents = mutableListOf<Event>()
-	var heroEvent: Event = HeroWins(hero)
+	var heroLastEvent: Event = HeroWins(hero)
+
 	for (room in game.rooms) {
-		val pair = battleInRoom(hero, room).also { roomEvents.addAll(it.second) }
-		hero = pair.first
+		hero = battleInRoom(hero, room).also { events.addAll(it.second) }.first
+
 		if (hero.isDead()) {
-			heroEvent = HeroDies(hero)
+			heroLastEvent = HeroDies(hero)
 			break
 		}
-		hero = pickItem(hero, room.item)
-		roomEvents.add(ItemPickEvent(hero, room.item))
+
+		hero = pickItem(hero, room.item).also { events += ItemPickEvent(it, room.item) }
 	}
-	return roomEvents + heroEvent
+
+	return events + heroLastEvent
 }
 
-fun pickItem(hero: Hero, item: Item): Hero {
+private fun pickItem(hero: Hero, item: Item): Hero {
 	with(hero) {
 		return Hero(
 			name,
@@ -30,39 +36,44 @@ fun pickItem(hero: Hero, item: Item): Hero {
 	}
 }
 
-fun battleInRoom(freshHero: Hero, room: Room): Pair<Hero, List<Event>> {
-	val fightEvents = mutableListOf<Event>()
-	fightEvents.add(RoomEvent(room, freshHero))
+private fun battleInRoom(heroAtRoomEntrance: Hero, room: Room): Pair<Hero, List<Event>> {
+	val events = mutableListOf<Event>()
+	events += RoomEvent(room, heroAtRoomEntrance)
 
 	val aliveMonsters = mutableListOf(room.monster)
 
-	var hero = freshHero
+	var hero = heroAtRoomEntrance
 	while (aliveMonsters.isNotEmpty()) {
 		val monster = aliveMonsters.removeFirst()
 
-		val fightResult = fightHeroAndMonster(hero, monster).also { fightEvents.add(it) }
-		hero = fightResult.hero
+		val fightEvent = fightHeroAndMonster(hero, monster).also { events += it }
+		hero = fightEvent.hero
+
 		if (hero.isDead()) {
+			// we break the loop, but the event is added in the calling function, that is misleading
 			break
 		}
-		with(fightResult.monster) {
-			if (this.isAlive()) {
-				cloneMonsterIfPossible(this).run {
-					aliveMonsters.addAll(this)
-					if (this.size > 1) {
-						fightEvents.add(MonsterClonedEvent(this.first()))
-					}
-				}
-			} else {
-				fightEvents.add(MonsterIsDeadEvent(this))
+
+		val monsterAfterFight = fightEvent.monster
+		if (monsterAfterFight.isDead()) {
+			events += MonsterIsDeadEvent(monsterAfterFight)
+			continue
+		}
+
+		cloneMonsterIfPossible(monsterAfterFight).run {
+			aliveMonsters.addAll(this)
+			if (this.size > 1) {
+				events += MonsterClonedEvent(this.first())
 			}
 		}
 	}
-	return Pair(hero, fightEvents)
+
+	// since the usage of Pair is immediate, we can use it as a return value
+	return Pair(hero, events)
 }
 
-private fun fightHeroAndMonster(hero: Hero, monster: Monster): FightEvent {
-	return if (monster.speed > hero.speed) {
+private fun fightHeroAndMonster(hero: Hero, monster: Monster) =
+	if (monster.speed > hero.speed) {
 		val newHero = hitHeroByMonster(hero, monster)
 		val newMonster = if (newHero.isAlive()) {
 			hitMonsterByHero(monster, newHero)
@@ -75,13 +86,13 @@ private fun fightHeroAndMonster(hero: Hero, monster: Monster): FightEvent {
 		} else hero
 		FightEvent(newHero, newMonster)
 	}
-}
 
 
 private fun hitMonsterByHero(monster: Monster, hero: Hero) = monster.copy(health = monster.health - hero.attack)
 
 private fun hitHeroByMonster(hero: Hero, monster: Monster) = hero.copy(health = hero.health - monster.attack)
-fun cloneMonsterIfPossible(monster: Monster): List<Monster> {
+
+private fun cloneMonsterIfPossible(monster: Monster): List<Monster> {
 	if (!monster.cloneable.value) {
 		return listOf(monster)
 	}
