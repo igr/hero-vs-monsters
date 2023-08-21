@@ -10,7 +10,7 @@ Please add as many comments as possible to your code, so that it is easy to unde
 
 TBA
 
-## ⚔️ The problem
+## 🤴⚔️😈 The problem
 
 Implement gameplay for a simple RPG. In the game, there is the **hero**, our main character, and the **maze**, which acts as the game map.
 
@@ -86,7 +86,7 @@ Monster Red Dragon attacks: WAAAAAHOOORRRRL
 Hero Beorn fights Red Dragon
 Monster Red Dragon attacks: RRRRROOOOOWLAAAAH
 Hero Beorn fights Red Dragon
-Monsters cloned!
+Monster Red Dragon cloned!
 Monster Red Dragon attacks: RRRRRRLOOOOHWAAAAAA
 Hero Beorn fights Red Dragon
 Monster Red Dragon is dead
