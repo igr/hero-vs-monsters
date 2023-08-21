@@ -45,6 +45,9 @@ value class SpeedDamage(private val value: Int)
 @JvmInline
 value class Cloneable(val value: Boolean)
 
+/**
+ * The only abstraction between Hero and Monster, more for esthetically reasons.
+ */
 interface LivingCreature {
 	val health: Health
 	fun isAlive() = health.value > 0
@@ -56,14 +59,6 @@ data class Hero(
 	override val health: Health,
 	val attack: Attack,
 	val speed: Speed) : LivingCreature {
-	fun pick(item: Item): Hero {
-		return Hero(
-			name,
-			health + item.health,
-			attack + item.attack,
-			speed + item.speed
-		)
-	}
 }
 
 data class Monster(

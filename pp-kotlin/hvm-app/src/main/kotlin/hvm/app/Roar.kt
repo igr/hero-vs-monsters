@@ -3,7 +3,6 @@ package hvm.app
 import java.util.*
 
 private val roarChars: List<Char> = "HWLROA".toList()
-
 fun makeRoar(): String {
 	val list = roarChars.toMutableList()
 	list.shuffle()

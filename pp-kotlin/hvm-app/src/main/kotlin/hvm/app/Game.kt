@@ -1,7 +1,6 @@
 package hvm.app
 
 import hvm.app.Event.*
-import hvm.app.FightStatus.*
 
 fun play(game: Game): List<Event> {
 	var hero: Hero = game.hero
@@ -14,10 +13,21 @@ fun play(game: Game): List<Event> {
 			heroEvent = HeroDies(hero)
 			break
 		}
-		hero = hero.pick(room.item)
+		hero = pickItem(hero, room.item)
 		roomEvents.add(ItemPickEvent(hero, room.item))
 	}
 	return roomEvents + heroEvent
+}
+
+fun pickItem(hero: Hero, item: Item): Hero {
+	with(hero) {
+		return Hero(
+			name,
+			health + item.health,
+			attack + item.attack,
+			speed + item.speed
+		)
+	}
 }
 
 fun battleInRoom(freshHero: Hero, room: Room): Pair<Hero, List<Event>> {
@@ -57,13 +67,13 @@ private fun fightHeroAndMonster(hero: Hero, monster: Monster): FightEvent {
 		val newMonster = if (newHero.isAlive()) {
 			hitMonsterByHero(monster, newHero)
 		} else monster
-		FightEvent.of(newHero, newMonster)
+		FightEvent(newHero, newMonster)
 	} else {
 		val newMonster = hitMonsterByHero(monster, hero)
 		val newHero = if (newMonster.isAlive()) {
 			hitHeroByMonster(hero, newMonster)
 		} else hero
-		FightEvent.of(newHero, newMonster)
+		FightEvent(newHero, newMonster)
 	}
 }
 
@@ -84,42 +94,3 @@ fun cloneMonsterIfPossible(monster: Monster): List<Monster> {
 	)
 }
 
-
-enum class FightStatus {
-	HERO_WON, HERO_DIED, BOTH_ALIVE
-}
-
-sealed class Event {
-
-	data class HeroWins(val hero: Hero) : Event()
-
-	data class HeroDies(val hero: Hero) : Event()
-
-	data class MonsterClonedEvent(val monster: Monster) : Event()
-	data class ItemPickEvent(val hero: Hero, val item: Item) : Event()
-	data class MonsterIsDeadEvent(val monster: Monster) : Event()
-
-	data class RoomEvent(
-		val room: Room,
-		val hero: Hero,
-	) : Event()
-
-	data class FightEvent(
-		val hero: Hero,
-		val monster: Monster,
-		val status: FightStatus,
-	) : Event() {
-		companion object {
-			fun of(hero: Hero, monster: Monster): FightEvent {
-				if (hero.isAlive() && monster.isAlive()) {
-					return FightEvent(hero, monster, BOTH_ALIVE)
-				}
-				return if (hero.isAlive()) {
-					FightEvent(hero, monster, HERO_WON)
-				} else {
-					FightEvent(hero, monster, HERO_DIED)
-				}
-			}
-		}
-	}
-}
