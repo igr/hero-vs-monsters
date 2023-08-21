@@ -51,7 +51,7 @@ public final class Game {
 
 				final var clonedMonsters = new MonsterCloner(monsters).spawnClonedMonsters();
 				if (!clonedMonsters.isEmpty()) {
-					tv.show("Monsters cloned!");
+					tv.show("Monster " + monsters.get(0).getName() + " cloned!");
 					monsters.addAll(clonedMonsters);
 				}
 			}
