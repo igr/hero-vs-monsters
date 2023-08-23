@@ -1,10 +1,14 @@
 # Hero vs Monsters
 
-This repository contains the list of different implementations of the same problem, described below. The purpose is to present different programming styles, languages, methodologies, patterns... and to compare them.
+This repository contains the list of different solutions of the same problem, described below. Its goal is to showcase a variety of programming styles, languages, methodologies, and patterns, and to compare them.
 
 Each subfolder must be a complete solution, with its own build system. The only common part is the problem description.
 
-Please add as many comments as possible to your code, so that it is easy to understand. The purpose is to learn from each other, and to compare different approaches.
+While this is a minor problem, feel free to express your ideas and demonstrate your principles. For example, if you have a separate module with only one file, that's perfectly acceptable here since our focus is to provide an illustrative example.
+
+You are welcome to add more implementations, or enhance existing ones. It's perfectly fine to have multiple implementations in the same language, provided they're sufficiently distinct.
+
+We encourage you to add as many comments to your code as possible to make it easier to understand. Our aim is to learn from each other and compare different approaches.
 
 ## Implementations
 
