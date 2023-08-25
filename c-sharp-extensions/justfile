@@ -1,0 +1,7 @@
+# just displays the receipes
+default:
+    @just --list
+
+# runs the application
+run:
+    dotnet run --project ./src/HeroVsMonsters.csproj
