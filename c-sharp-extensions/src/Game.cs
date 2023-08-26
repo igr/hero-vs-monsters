@@ -24,10 +24,7 @@ public class Game
             .CloneSurvivedMonstersInRoom(_tv)
             .FightWithSurvivedMonstersInRoom(FightMonster);
         
-        if (_hero.IsAlive())
-        {
-            _tv.Show("Hero " + _hero.Name + " wins!");
-        }
+        _tv.ShowConditionally($"Hero {_hero.Name} wins!", _hero.IsAlive);
     }
     
     private void FightMonster(Monster monster)
@@ -35,13 +32,7 @@ public class Game
         _tv.Show($"Monster {monster.Name} attacks: {monster.Roar()}");
         _tv.Show($"Hero {_hero.Name} fights {monster.Name}");
         _hero.Fight(monster);
-        if (_hero.IsDead())
-        {
-            _tv.Show($"Hero {_hero.Name} is dead");
-        }
-        if (monster.IsDead())
-        {
-            _tv.Show($"Monster {monster.Name} is dead");
-        }
+        _tv.ShowConditionally($"Hero {_hero.Name} is dead", _hero.IsDead);
+        _tv.ShowConditionally($"Monster {monster.Name} is dead", monster.IsDead);
     }
 }

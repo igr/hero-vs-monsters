@@ -23,9 +23,9 @@ public class Monster
         _cloneable = cloneable;
     }
     
-    public bool IsAlive() => _health > 0;
+    public bool IsAlive => _health > 0;
 
-    public bool IsDead() => !IsAlive();
+    public bool IsDead => !IsAlive;
     
     public void Hit(Hero target) => target.TakeHit(_attack, _speedDamage);
 
