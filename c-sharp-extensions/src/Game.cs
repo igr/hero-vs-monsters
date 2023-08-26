@@ -14,11 +14,7 @@ public class Game
     }
 
     /// <summary>
-    /// Use of c# extensions methods (chaining) and power of IEnumerable .NET feature:
-    /// IEnumerable is the return type from an iterator. An iterator is a method that uses the yield return keywords. 
-    /// yield return is different from a normal return statement because, while it does return a value from the function, 
-    /// it doesn't “close the book” on that function. The next time a value is expected, the function will continue executing 
-    /// statements after the yield return until it hits another yield return.
+    /// Use of c# extensions methods (chaining) and power of IEnumerable/yield return .NET feature
     /// These extension methods are located in GameExtensions.cs
     /// </summary>
     public void Play()
