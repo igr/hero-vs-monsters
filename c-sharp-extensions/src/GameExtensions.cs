@@ -11,16 +11,15 @@ public static class GameExtensions
         }
     }
 
-    public static IEnumerable<(Room room, List<Monster> survivedMonsters)> GetSurvivedMonstersInRoomOrUseItem(
-        this IEnumerable<Room> rooms, Hero hero, ConsoleTv tv)
+    public static IEnumerable<Room> GetSurvivedMonstersInRoomOrUseItem(this IEnumerable<Room> rooms, Hero hero, ConsoleTv tv)
     {
-        foreach (var room in rooms.Where(_ => hero.IsAlive()))
+        foreach (var room in rooms)
         {
-            while (room.Monsters.Any(m => m.IsAlive()))
+            while (room.AliveMonsters().Any())
             {
-                yield return (room, room.Monsters.Where(m => m.IsAlive()).ToList());
+                yield return room;
             }
-            
+
             if (hero.IsAlive())
             {
                 hero.UseItem(room.Item);    
@@ -29,31 +28,28 @@ public static class GameExtensions
         }
     }
 
-    public static IEnumerable<(Room room, List<Monster> survivedMonsters)> CloneSurvivedMonstersInRoom(
-        this IEnumerable<(Room room, List<Monster> survivedMonsters)> survivedMonstersInRoom, ConsoleTv tv)
+    public static IEnumerable<Room> CloneSurvivedMonstersInRoom(this IEnumerable<Room> rooms, ConsoleTv tv)
     {
-        foreach (var (room, survivedMonsters) in survivedMonstersInRoom)
+        foreach (var room in rooms)
         {
                 var clonedMonsters = new List<Monster>();
-                survivedMonsters.ForEach(m => clonedMonsters.AddRange(m.TrySpawnClone()));
+                room.AliveMonsters().ForEach(m => clonedMonsters.AddRange(m.TrySpawnClone()));
             
-                if (clonedMonsters.Any())
-                {
-                    tv.Show($"Monster {survivedMonsters.First().Name} cloned!");
+                clonedMonsters.ForEach(c =>
+                { 
+                    tv.Show($"Monster {room.AliveMonsters().First().Name} cloned!");
                     room.Monsters.AddRange(clonedMonsters);
-                }
-                
-                yield return (room, room.Monsters.Where(m => m.IsAlive()).ToList());
+                });
+
+                yield return room;
         }
     }
 
-    public static void FightWithSurvivedMonstersInRoom(
-        this IEnumerable<(Room room, List<Monster> survivedMonsters)> survivedMonstersInRoom,
-        Action<Monster> fightMonster)
+    public static void FightWithSurvivedMonstersInRoom(this IEnumerable<Room> rooms, Action<Monster> fightMonster)
     {
-        foreach (var (_, survivedMonsters) in survivedMonstersInRoom)
+        foreach (var room in rooms)
         {
-            survivedMonsters.ForEach(fightMonster);
+            room.AliveMonsters().ForEach(fightMonster);
         }
     }
 }
