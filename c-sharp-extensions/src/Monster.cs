@@ -36,15 +36,13 @@ public class Monster
     
     public IEnumerable<Monster> TrySpawnClone()
     {
-        var clonedMonsters = new List<Monster>();
         if (!_cloneable || _health > _initialHealth / 4) {
-            return clonedMonsters;
+            return new List<Monster>();
         }
         
-        clonedMonsters.Add(new Monster(Name + " clone", _health / 2, _attack, Speed, _speedDamage, false));
         _health /= 2;
         _cloneable = false;
-        return clonedMonsters;
+        return new []{new Monster(Name + " clone", _health / 2, _attack, Speed, _speedDamage, false)};
     }
 
     public string Roar()
@@ -52,14 +50,11 @@ public class Monster
         var shuffledLetters = "HWLROA".OrderBy(_ => Guid.NewGuid());
         var random = new Random();
 
-        return string.Join("", shuffledLetters.Select(letter =>
+        return string.Join("", shuffledLetters.Select(letter => letter switch
         {
-            return letter switch
-            {
-                'H' or 'W' or 'L' => letter.ToString(),
-                'R' or 'O' or 'A' => string.Concat(Enumerable.Repeat(letter, random.Next(3, 7))),
-                _ => ""
-            };
+            'H' or 'W' or 'L' => letter.ToString(),
+            'R' or 'O' or 'A' => string.Concat(Enumerable.Repeat(letter, random.Next(3, 7))),
+            _ => ""
         }));
     }
 }
