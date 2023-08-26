@@ -4,15 +4,15 @@ public static class GameExtensions
 {
     public static IEnumerable<Room> GetNextRoomOrUseItem(this IEnumerable<Room> rooms, Hero hero, ConsoleTv tv)
     {
-        foreach (var room in rooms.Where(_ => hero.IsAlive()))
+        foreach (var room in rooms.Where(_ => hero.IsAlive))
         {
             tv.Show("Hero " + hero.Name + " enters " + room.Name);
-            while (room.AliveMonsters().Any() && hero.IsAlive())
+            while (room.AliveMonsters().Any() && hero.IsAlive)
             {
                 yield return room;
             }
             
-            if (hero.IsAlive())
+            if (hero.IsAlive)
             {
                 hero.UseItem(room.Item);    
                 tv.Show("Hero " + hero.Name + " founds " + room.Item.Name);

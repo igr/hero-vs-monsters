@@ -2,9 +2,9 @@ namespace HeroVsMonsters;
 
 public record struct Hero(string Name, int Health, int Attack, int Speed)
 {
-    public bool IsAlive() => Health > 0;
+    public bool IsAlive => Health > 0;
 
-    public readonly bool IsDead() => Health <= 0;
+    public bool IsDead => Health <= 0;
 
     private void Hit(Monster target) => target.TakeHit(Attack);
 
@@ -26,7 +26,7 @@ public record struct Hero(string Name, int Health, int Attack, int Speed)
         if (monster.Speed > Speed)
         {
             monster.Hit(this);
-            if (IsAlive())
+            if (IsAlive)
             {
                 Hit(monster);
             }
@@ -34,7 +34,7 @@ public record struct Hero(string Name, int Health, int Attack, int Speed)
         else
         {
             Hit(monster);
-            if (monster.IsAlive())
+            if (monster.IsAlive)
             {
                 monster.Hit(this);
             }
