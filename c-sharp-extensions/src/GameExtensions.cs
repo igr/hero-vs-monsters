@@ -2,24 +2,16 @@ namespace HeroVsMonsters;
 
 public static class GameExtensions
 {
-    public static IEnumerable<Room> GetNextRoom(this IEnumerable<Room> allRooms, Hero hero, ConsoleTv tv)
+    public static IEnumerable<Room> GetNextRoomOrUseItem(this IEnumerable<Room> rooms, Hero hero, ConsoleTv tv)
     {
-        foreach (var room in allRooms.Where(_ => hero.IsAlive()))
+        foreach (var room in rooms.Where(_ => hero.IsAlive()))
         {
             tv.Show("Hero " + hero.Name + " enters " + room.Name);
-            yield return room;
-        }
-    }
-
-    public static IEnumerable<Room> GetSurvivedMonstersInRoomOrUseItem(this IEnumerable<Room> rooms, Hero hero, ConsoleTv tv)
-    {
-        foreach (var room in rooms)
-        {
-            while (room.AliveMonsters().Any())
+            while (room.AliveMonsters().Any() && hero.IsAlive())
             {
                 yield return room;
             }
-
+            
             if (hero.IsAlive())
             {
                 hero.UseItem(room.Item);    
@@ -32,13 +24,10 @@ public static class GameExtensions
     {
         foreach (var room in rooms)
         {
-                var clonedMonsters = new List<Monster>();
-                room.AliveMonsters().ForEach(m => clonedMonsters.AddRange(m.TrySpawnClone()));
-            
-                clonedMonsters.ForEach(_ =>
+                room.AliveMonsters().SelectMany(m => m.TrySpawnClone()).ToList().ForEach(cloned =>
                 { 
                     tv.Show($"Monster {room.AliveMonsters().First().Name} cloned!");
-                    room.Monsters.AddRange(clonedMonsters);
+                    room.Monsters.Add(cloned);
                 });
 
                 yield return room;

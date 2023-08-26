@@ -20,8 +20,7 @@ public class Game
     public void Play()
     {
         _rooms
-            .GetNextRoom(_hero, _tv)
-            .GetSurvivedMonstersInRoomOrUseItem(_hero, _tv)
+            .GetNextRoomOrUseItem(_hero, _tv)
             .CloneSurvivedMonstersInRoom(_tv)
             .FightWithSurvivedMonstersInRoom(FightMonster);
         
@@ -33,16 +32,14 @@ public class Game
     
     private void FightMonster(Monster monster)
     {
-        var roar = monster.Roar();
-        _tv.Show($"Monster {monster.Name} attacks: {roar}");
+        _tv.Show($"Monster {monster.Name} attacks: {monster.Roar()}");
         _tv.Show($"Hero {_hero.Name} fights {monster.Name}");
         _hero.Fight(monster);
-
         if (_hero.IsDead())
         {
             _tv.Show($"Hero {_hero.Name} is dead");
         }
-        else if (monster.IsDead())
+        if (monster.IsDead())
         {
             _tv.Show($"Monster {monster.Name} is dead");
         }
