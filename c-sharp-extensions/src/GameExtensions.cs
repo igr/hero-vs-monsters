@@ -35,7 +35,7 @@ public static class GameExtensions
                 var clonedMonsters = new List<Monster>();
                 room.AliveMonsters().ForEach(m => clonedMonsters.AddRange(m.TrySpawnClone()));
             
-                clonedMonsters.ForEach(c =>
+                clonedMonsters.ForEach(_ =>
                 { 
                     tv.Show($"Monster {room.AliveMonsters().First().Name} cloned!");
                     room.Monsters.AddRange(clonedMonsters);

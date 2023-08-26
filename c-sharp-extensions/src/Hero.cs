@@ -6,10 +6,7 @@ public record struct Hero(string Name, int Health, int Attack, int Speed)
 
     public readonly bool IsDead() => Health <= 0;
 
-    private void Hit(Monster target)
-    {
-        target.TakeHit(Attack);
-    }
+    private void Hit(Monster target) => target.TakeHit(Attack);
 
     public void TakeHit(int attack, int speedDamage)
     {
