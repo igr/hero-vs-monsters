@@ -22,12 +22,8 @@ func (g Game) Play() {
 	for _, room := range g.maze {
 		tv.Show("🚪 Hero " + hero.Name + " enters " + room.Name)
 
+		aliveMonsters := room.AliveMonsters()
 		for {
-			aliveMonsters := room.AliveMonsters()
-			if len(aliveMonsters) == 0 {
-				break
-			}
-
 			for _, monster := range aliveMonsters {
 				room.Combat(hero, &monster)
 			}
@@ -35,6 +31,14 @@ func (g Game) Play() {
 			if !hero.IsAlive() {
 				// do not process more rooms, as the hero died
 				return
+			}
+
+			// refresh the list of alive monsters in case they cloned themselves
+			aliveMonsters = room.AliveMonsters()
+			if len(aliveMonsters) == 0 {
+				tv.Show("✨ Hero " + hero.Name + " founds " + room.Item.Name)
+				hero.Take(room.Item)
+				break
 			}
 		}
 	}

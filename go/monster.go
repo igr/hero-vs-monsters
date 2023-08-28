@@ -2,10 +2,44 @@ package main
 
 import "math/rand"
 
+// ClonabilityThreshold is the percentage of health below which a monster can be cloned
+const ClonabilityThreshold = 25
+
 type Monster struct {
 	*CharacterAttributes
-	SpeedDamage int
-	Clonable    bool
+	SpeedDamage   int
+	Clonable      bool
+	Cloned        bool
+	initialHealth int
+}
+
+func (m *Monster) CanBeCloned() bool {
+	return m.IsAlive() && m.Clonable && !m.Cloned && (m.Health <= m.initialHealth*ClonabilityThreshold/100)
+}
+
+// Clone returns a new Monster with half of its healt.
+// It will also mark the current monster as cloned, so it cannot be cloned again.
+func (m *Monster) Clone() Monster {
+	newHealth := m.Health / 2
+
+	cloned := Monster{
+		CharacterAttributes: &CharacterAttributes{
+			Name:         m.Name + " (Cloned)",
+			Health:       newHealth,
+			AttackDamage: m.AttackDamage,
+			Speed:        m.Speed,
+		},
+		SpeedDamage:   m.SpeedDamage,
+		Clonable:      false,
+		Cloned:        false,
+		initialHealth: newHealth,
+	}
+
+	m.Health -= newHealth
+	m.Cloned = true // important to avoid infinite cloning
+
+	tv.Show("👥 Monster " + m.Name + " cloned itself!")
+	return cloned
 }
 
 func (m *Monster) Roar() string {

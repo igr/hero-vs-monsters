@@ -35,15 +35,18 @@ func NewRoom(s string) Room {
 		panic("invalid room")
 	}
 
+	monsterHealth := parseIntAttribute(tokens[2])
+
 	monster := Monster{
 		CharacterAttributes: &CharacterAttributes{
 			Name:         tokens[1],
-			Health:       parseIntAttribute(tokens[2]),
+			Health:       monsterHealth,
 			AttackDamage: parseIntAttribute(tokens[3]),
 			Speed:        parseIntAttribute(tokens[4]),
 		},
-		SpeedDamage: parseIntAttribute(tokens[5]),
-		Clonable:    parseBoolAttribute(tokens[6]),
+		SpeedDamage:   parseIntAttribute(tokens[5]),
+		Clonable:      parseBoolAttribute(tokens[6]),
+		initialHealth: monsterHealth,
 	}
 
 	item := Item{
@@ -81,8 +84,6 @@ func (r *Room) Combat(h *Hero, m *Monster) {
 		}
 		if !m.IsAlive() {
 			tv.Show("💀 Monster " + m.Name + " is dead")
-			tv.Show("✨ Hero " + h.Name + " founds " + r.Item.Name)
-			h.Take(r.Item)
 			break
 		}
 
@@ -97,6 +98,11 @@ func (r *Room) Combat(h *Hero, m *Monster) {
 			if h.IsAlive() {
 				h.Hit(m)
 			}
+		}
+
+		if m.CanBeCloned() {
+			cloned := m.Clone()
+			r.Monsters = append(r.Monsters, cloned)
 		}
 	}
 }
