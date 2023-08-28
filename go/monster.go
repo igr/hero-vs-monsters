@@ -77,10 +77,6 @@ func (m *Monster) IsAlive() bool {
 }
 
 func (m *Monster) Hit(h *Hero) {
-	if !m.IsAlive() {
-		return
-	}
-
 	h.Health -= m.AttackDamage
 	// the monster slows down the hero
 	h.Speed -= m.SpeedDamage
