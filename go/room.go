@@ -4,7 +4,7 @@ import "strings"
 
 type Room struct {
 	Name     string
-	Monsters []Monster
+	Monsters []*Monster
 	Item     Item
 }
 
@@ -40,13 +40,13 @@ func NewRoom(s string) Room {
 
 	return Room{
 		Name:     tokens[0],
-		Monsters: []Monster{monster},
+		Monsters: []*Monster{&monster},
 		Item:     item,
 	}
 }
 
-func (r *Room) AliveMonsters() []Monster {
-	monsters := []Monster{}
+func (r *Room) AliveMonsters() []*Monster {
+	monsters := []*Monster{}
 	for _, m := range r.Monsters {
 		if m.IsAlive() {
 			monsters = append(monsters, m)
