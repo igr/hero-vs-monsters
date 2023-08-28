@@ -88,6 +88,7 @@ func (r *Room) Combat(h *Hero, m *Monster) {
 		}
 
 		if h.Speed > m.Speed {
+			tv.Show("🗡️ Hero " + h.Name + " fights " + m.Name)
 			h.Hit(m)
 
 			if m.IsAlive() {
@@ -95,9 +96,10 @@ func (r *Room) Combat(h *Hero, m *Monster) {
 				m.Hit(h)
 			}
 		} else {
+			tv.Show("🧌 Monster " + m.Name + " attacks: " + m.Roar())
 			m.Hit(h)
 			if h.IsAlive() {
-				tv.Show("🧌 Monster " + m.Name + " attacks: " + m.Roar())
+				tv.Show("🗡️ Hero " + h.Name + " fights " + m.Name)
 				h.Hit(m)
 			}
 		}
