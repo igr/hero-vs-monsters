@@ -17,6 +17,7 @@ func (ConsoleTV) Show(message string) {
 }
 
 type Game struct {
+	tv   Television
 	hero *Hero
 	maze []Room
 }
@@ -24,30 +25,57 @@ type Game struct {
 func (g Game) Play() {
 	hero := g.hero
 	for _, room := range g.maze {
-		tv.Show("🚪 Hero " + hero.Name + " enters " + room.Name)
+		g.tv.Show("🚪 Hero " + hero.Name + " enters " + room.Name)
 
 		aliveMonsters := room.AliveMonsters()
 		for {
 			for _, monster := range aliveMonsters {
-				room.Combat(hero, &monster)
-			}
+				if hero.Speed > monster.Speed {
+					g.tv.Show("🗡️ Hero " + hero.Name + " fights " + monster.Name)
+					hero.Hit(monster)
 
-			if !hero.IsAlive() {
-				// do not process more rooms, as the hero died
-				return
+					if monster.IsAlive() {
+						g.tv.Show("🧌 Monster " + monster.Name + " attacks: " + monster.Roar())
+						monster.Hit(hero)
+					}
+				} else {
+					g.tv.Show("🧌 Monster " + monster.Name + " attacks: " + monster.Roar())
+					monster.Hit(hero)
+					if hero.IsAlive() {
+						g.tv.Show("🗡️ Hero " + hero.Name + " fights " + monster.Name)
+						hero.Hit(monster)
+					}
+				}
+
+				if !monster.IsAlive() {
+					g.tv.Show("💀 Monster " + monster.Name + " is dead")
+					continue
+				}
+
+				if monster.CanBeCloned() {
+					cloned := monster.clone()
+					room.Monsters = append(room.Monsters, &cloned)
+					g.tv.Show("👥 Monster " + monster.Name + " cloned itself!")
+				}
+
+				if !hero.IsAlive() {
+					// do not process more rooms, as the hero died
+					g.tv.Show("💀 Hero " + hero.Name + " died in room " + room.Name)
+					return
+				}
 			}
 
 			// refresh the list of alive monsters in case they cloned themselves
 			aliveMonsters = room.AliveMonsters()
 			if len(aliveMonsters) == 0 {
-				tv.Show("✨ Hero " + hero.Name + " founds " + room.Item.Name)
+				g.tv.Show("✨ Hero " + hero.Name + " found " + room.Item.Name)
 				hero.Take(room.Item)
 				break
 			}
 		}
 	}
 
-	tv.Show("🏆 Hero " + hero.Name + " wins!")
+	g.tv.Show("🏆 Hero " + hero.Name + " wins!")
 }
 
 func loadGame(f string) Game {

@@ -6,10 +6,9 @@ import (
 	"strings"
 )
 
-var tv Television = ConsoleTV{}
-
 func main() {
 	//var defaultGameFile = filepath.Join("..", "game1.txt")
+	var tv Television = ConsoleTV{}
 
 	flag.Parse()
 	args := flag.Args()
@@ -31,6 +30,8 @@ func main() {
 	}
 
 	game := loadGame(gameFile)
+
+	game.tv = tv
 
 	game.Play()
 }

@@ -55,39 +55,3 @@ func (r *Room) AliveMonsters() []*Monster {
 
 	return monsters
 }
-
-func (r *Room) Combat(h *Hero, m *Monster) {
-	for {
-		if !h.IsAlive() {
-			tv.Show("💀 Hero " + h.Name + " dies!")
-			break
-		}
-		if !m.IsAlive() {
-			tv.Show("💀 Monster " + m.Name + " is dead")
-			break
-		}
-
-		if h.Speed > m.Speed {
-			tv.Show("🗡️ Hero " + h.Name + " fights " + m.Name)
-			h.Hit(m)
-
-			if m.IsAlive() {
-				tv.Show("🧌 Monster " + m.Name + " attacks: " + m.Roar())
-				m.Hit(h)
-			}
-		} else {
-			tv.Show("🧌 Monster " + m.Name + " attacks: " + m.Roar())
-			m.Hit(h)
-			if h.IsAlive() {
-				tv.Show("🗡️ Hero " + h.Name + " fights " + m.Name)
-				h.Hit(m)
-			}
-		}
-
-		if m.CanBeCloned() {
-			cloned := m.clone()
-			r.Monsters = append(r.Monsters, cloned)
-			tv.Show("👥 Monster " + m.Name + " cloned itself!")
-		}
-	}
-}
