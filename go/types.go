@@ -91,18 +91,21 @@ func (r *Room) Combat(h *Hero, m *Monster) {
 			h.Hit(m)
 
 			if m.IsAlive() {
+				tv.Show("🧌 Monster " + m.Name + " attacks: " + m.Roar())
 				m.Hit(h)
 			}
 		} else {
 			m.Hit(h)
 			if h.IsAlive() {
+				tv.Show("🧌 Monster " + m.Name + " attacks: " + m.Roar())
 				h.Hit(m)
 			}
 		}
 
 		if m.CanBeCloned() {
-			cloned := m.Clone()
+			cloned := m.clone()
 			r.Monsters = append(r.Monsters, cloned)
+			tv.Show("👥 Monster " + m.Name + " cloned itself!")
 		}
 	}
 }
