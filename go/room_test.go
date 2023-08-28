@@ -20,7 +20,7 @@ func TestAliveMonsters(t *testing.T) {
 
 	// add 10 alive monster
 	for i := 0; i < 10; i++ {
-		r.Monsters = append(r.Monsters, Monster{
+		r.Monsters = append(r.Monsters, &Monster{
 			CharacterAttributes: &CharacterAttributes{
 				Health: initialHealth,
 			},
