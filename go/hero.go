@@ -32,8 +32,6 @@ func (h *Hero) Hit(m *Monster) {
 		return
 	}
 
-	tv.Show("🗡️ Hero " + h.Name + " fights " + m.Name)
-
 	m.Health -= h.AttackDamage
 }
 
