@@ -15,6 +15,7 @@ We encourage you to add as many comments to your code as possible to make it eas
 + [Procedural Programming, Kotlin](pp-kotlin/README.md) by @igr
 + [Object Oriented Programming, Java](simple-oop-java/README.md) by @igr
 + [C# implementation](c-sharp-extensions/README.md) by @milosmisic
++ [Go](go/README.md) by @mdelapenya
 
 ## 🤴⚔️😈 The problem
 
