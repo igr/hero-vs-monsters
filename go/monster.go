@@ -1,6 +1,8 @@
 package main
 
-import "math/rand"
+import (
+	"math/rand"
+)
 
 // ClonabilityThreshold is the percentage of health below which a monster can be cloned
 const ClonabilityThreshold = 25
@@ -17,9 +19,9 @@ func (m *Monster) CanBeCloned() bool {
 	return m.IsAlive() && m.Clonable && !m.Cloned && (m.Health <= m.initialHealth*ClonabilityThreshold/100)
 }
 
-// Clone returns a new Monster with half of its healt.
+// clone returns a new Monster with half of its healt.
 // It will also mark the current monster as cloned, so it cannot be cloned again.
-func (m *Monster) Clone() Monster {
+func (m *Monster) clone() Monster {
 	newHealth := m.Health / 2
 
 	cloned := Monster{
@@ -38,7 +40,6 @@ func (m *Monster) Clone() Monster {
 	m.Health -= newHealth
 	m.Cloned = true // important to avoid infinite cloning
 
-	tv.Show("👥 Monster " + m.Name + " cloned itself!")
 	return cloned
 }
 
@@ -79,8 +80,6 @@ func (m *Monster) Hit(h *Hero) {
 	if !m.IsAlive() {
 		return
 	}
-
-	tv.Show("🧌 Monster " + m.Name + " attacks: " + m.Roar())
 
 	h.Health -= m.AttackDamage
 	// the monster slows down the hero
