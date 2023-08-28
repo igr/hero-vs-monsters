@@ -36,7 +36,7 @@ Monsters have an another attribute:
 
 + speed damage
 
-The hero and monster take turns attacking each other. The `attack damage` indicates the amount of damage the hero or the monster will cause to their opponent (i.e., reducing their health) each turn. One is defeated once their health drops to `0` (or less). `Speed` determines which character attacks first (the one with a higher speed). `Speed damage` is the amount of damage the hero will suffer if hit by the monster. The game is won when the last monster is defeated. Whenever the hero is defeated, it’s game over.
+The hero and monster take turns attacking each other. The `attack damage` indicates the amount of damage the hero or the monster will cause to their opponent (i.e., reducing their health) each turn. One is defeated once their health drops to `0` (or less). `Speed` determines which character attacks first (the one with a higher speed). `Speed damage` is the reduction in speed the hero will suffer if hit by the monster. The game is won when the last monster is defeated. Whenever the hero is defeated, it’s game over.
 
 Some monsters have the ability to clone themselves. This happens on the monster's turn when his health is less than `25%` of its initial health. The health is then split between the two. A monster can only clone itself once.
 
