@@ -28,10 +28,6 @@ func NewHero(s string) *Hero {
 }
 
 func (h *Hero) Hit(m *Monster) {
-	if !h.IsAlive() {
-		return
-	}
-
 	m.Health -= h.AttackDamage
 }
 
