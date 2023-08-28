@@ -7,3 +7,11 @@ The command line accepts just one single argument: the path to the input file, w
 ```bash
 go run . ../game1.txt
 ```
+
+## Tests
+
+To run the tests, just run the following command:
+
+```bash
+go test -count=1 -v ./...
+```
