@@ -27,7 +27,7 @@ roomsInput.forEach((row) => {
   const monsterAttack = parseInt(elements[3], 10);
   const monsterSpeed = parseInt(elements[4], 10);
   const monsterSpeedDamage = parseInt(elements[5], 10);
-  const monsterCloneable = Boolean(elements[6]);
+  const monsterCloneable = elements[6] === 'true' ? true : false;
   const itemName = elements[7];
   const itemHealth = parseInt(elements[8], 10);
   const itemAttack = parseInt(elements[9], 10);
