@@ -54,9 +54,6 @@ export class Monster extends Player {
     this.health -= attackDamage;
 
     if (this.cloneable && this.health < this.cloneableHealth && this.health > 0) {
-      console.log('🚀 ~ Monster ~ takeHitAndContinue ~ this.health < this.cloneableHealth && this.health > 0:', this.health < this.cloneableHealth && this.health > 0);
-      console.log('🚀 ~ Monster ~ takeHitAndContinue ~ this.cloneable :', this.cloneable);
-
       return this.cloneMonster();
     }
     // console.log("monster take a hit, is it alive", this.isAlive());

@@ -63,9 +63,11 @@ export class Maze {
               break;
             }
           } else {
-            const { attackDamage, health, speed } = room.item.getAttributes();
-            this.hero.enhanceWithItem(attackDamage, health, speed, room.item.name);
             room.takeOutMonster(room.monsters[0]);
+            if (!room.monsters.length) {
+              const { attackDamage, health, speed } = room.item.getAttributes();
+              this.hero.enhanceWithItem(attackDamage, health, speed, room.item.name);
+            }
           }
         } {
 
