@@ -16,12 +16,14 @@ We encourage you to add as many comments to your code as possible to make it eas
 + [Object Oriented Programming, Java](simple-oop-java/README.md) by @igr
 + [C# implementation](c-sharp-extensions/README.md) by @milosmisic
 + [Go](go/README.md) by @mdelapenya
++ [Typescript](typescript/README.md) by @jovanc
 
 ## 🤴⚔️😈 The problem
 
+
 Implement gameplay for a simple RPG. In the game, there is the **hero**, our main character, and the **maze**, which acts as the game map.
 
-The game map (maze) is a list of **rooms**. The hero moves from one room to another, never returning to a room he has already visited. There is alway one exit from the room, the hero automatically proceeds through it.
+The game map (maze) is a list of **rooms**. The hero moves from one room to another, never returning to a room he has already visited. There is always one exit from the room, the hero automatically proceeds through it.
 
 In each room, there is a **monster** and an **item**. The hero begins his journey from the first room, battling a monster in each room along his path. Once a monster is defeated, the hero picks up an item in the same room to enhance himself.
 

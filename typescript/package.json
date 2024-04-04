@@ -1,0 +1,26 @@
+{
+  "name": "hero-vs-monsters",
+  "version": "0.0.1",
+  "description": "typescript implementation with testing out new features of node.js",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node ./src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jovanc/hero-vs-monsters-jc.git"
+  },
+  "author": "Jovan Cvetanovic (jovanc@gmail.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jovanc/hero-vs-monsters-jc/issues"
+  },
+  "homepage": "https://github.com/jovanc/hero-vs-monsters-jc#readme",
+  "devDependencies": {
+    "@types/node": "^20.12.3",
+    "ts-node": "^10.9.2",
+    "tslib": "^2.6.2",
+    "typescript": "^5.4.3"
+  }
+}
