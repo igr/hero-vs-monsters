@@ -1,46 +1,49 @@
-export class BasicAttributes {
+import { PlayerAttributes } from "./types";
+
+export class Attributes {
   protected attackDamage: number;
   protected health: number;
-  public speed: number;
+  protected speed: number;
+  protected name: string;
 
-  constructor(attackDamage: number, health: number, speed: number) {
-    this.attackDamage = attackDamage;
-    this.health = health;
-    this.speed = speed;
+  constructor(input: PlayerAttributes) {
+    this.name = input.name;
+    this.attackDamage = input.attackDamage;
+    this.health = input.health;
+    this.speed = input.speed;
+  }
+
+  public getName(): string {
+    return this.name;
+  }
+
+  public getSpeed(): number {
+    return this.speed;
   }
 }
 
-export class Item extends BasicAttributes {
-  public name: string;
-  constructor(name: string, attackDamage: number, health: number, speed: number) {
-    super(attackDamage, health, speed);
-    this.name = name;
+export class Item extends Attributes {
+  constructor(input: PlayerAttributes) {
+    super(input);
   }
 
-  public getAttributes() {
+  public getAttributes(): PlayerAttributes {
     return {
       attackDamage: this.attackDamage,
       health: this.health,
       speed: this.speed,
+      name: this.name
     };
   }
 }
 
-export class Player extends BasicAttributes {
-  public name: string;
-
-  constructor(attackDamage: number, health: number, speed: number, name: string) {
-    super(attackDamage, health, speed);
-    this.name = name;
+export class Player extends Attributes {
+  constructor(input: PlayerAttributes) {
+    super(input);
   }
 
-  isAlive() {
-    if (this.health <= 0) {
-      // console.log(`${this.constructor.name} ${this.name} is dead!`);
-      return false;
-    }
-    return true;
-
+  public isAlive() {
+    return this.health <= 0 ? false : true;
   }
 
   public winsTheBattle(): void {

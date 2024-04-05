@@ -1,7 +1,4 @@
-import { Item } from "./basics.entity";
-import { Hero } from "./hero.entity";
-import { Monster } from "./monster.entity";
-import { Room } from "./room.entity";
+import { Hero, Monster, Room } from "./";
 
 export class Maze {
   public rooms: Room[] = [];
@@ -11,74 +8,76 @@ export class Maze {
     this.hero = hero;
   }
 
-
-  public createHero(attackDamage: number, health: number, speed: number, name: string): void {
-    this.hero = new Hero(attackDamage, health, speed, name);
-  }
-
-  public createMonster(attackDamage: number, health: number, speed: number, speedDamage: number, name: string, cloneable: boolean): Monster {
-    return new Monster(attackDamage, health, speed, speedDamage, name, cloneable);
-  }
-
-  public createItem(name: string, attackDamage: number, health: number, speed: number): Item {
-    return new Item(name, attackDamage, health, speed);
-  }
-
-  public createRoom(name: string, monster: Monster, item: Item,): void {
-    const room = new Room(name, monster, item);
+  public addRoom(room: Room): void {
     this.rooms.push(room);
   }
 
-  public startFight(): void {
+  private welcomeMessage(numberOfRooms: number): void {
     console.log("------------------------------------------------------------");
     console.log("Welcome to the monsters vs hero battle");
-    console.log(`Maze has ${this.rooms.length} rooms with different monsters`);
+    console.log(`Maze has ${numberOfRooms} rooms with different monsters`);
     console.log("Let's start the fight!");
-    this.rooms.forEach((room: Room) => {
-      console.log("------------------------------------------------------------");
-      this.hero.entersTheRoom(room.name);
-      const isHeroFirst = true;
-      // const isHeroFirst = this.hero.speed > room.monsters[0].speed;
-
-      while (room.monsters.length) {
-        // console.log('🚀 ~ Maze ~ this.rooms.forEach ~ room.monsters:', room.monsters);
-        // console.log('🚀 ~ Maze ~ this.rooms.forEach ~ hero:', this.hero);
-        if (isHeroFirst) {
-          const attackDamage = this.hero.attack(room.monsters[0].name);
-          const doWeContinueOrClonedMonster = room.monsters[0].takeHitAndContinue(attackDamage);
-
-          if (doWeContinueOrClonedMonster instanceof Monster) {
-            console.log('🚀 ~ Maze ~ this.rooms.forEach ~ doWeContinueOrClonedMonster:', doWeContinueOrClonedMonster);
-            room.monsters.push(doWeContinueOrClonedMonster);
-            const { attackDamage, speedDamage } = room.monsters[0].roarAndAttack();
-            const doWeContinue = this.hero.takeHitAndContinue(attackDamage, speedDamage);
-            continue;
-          }
-
-          if (doWeContinueOrClonedMonster) {
-            const { attackDamage, speedDamage } = room.monsters[0].roarAndAttack();
-            const doWeContinue = this.hero.takeHitAndContinue(attackDamage, speedDamage);
-            if (!doWeContinue) {
-              console.log('Hero defeated');
-              break;
-            }
-          } else {
-            room.takeOutMonster(room.monsters[0]);
-            if (!room.monsters.length) {
-              const { attackDamage, health, speed } = room.item.getAttributes();
-              this.hero.enhanceWithItem(attackDamage, health, speed, room.item.name);
-            }
-          }
-        } {
-
-        }
-      }
-
-      // const firstHit = heroSpeed > this.room.monster.speed
-    });
   }
 
-  // start fight
-  // next room
-  // pick first hit 
-};
+
+  private heroAttacksMonster(monster: Monster): boolean | Monster {
+    const attackDamage = this.hero.attack(monster.getName());
+    return monster.isAliveOrCLonedAfterAttack(attackDamage);
+  }
+
+  private monsterAttacksHero(monster: Monster): boolean {
+    const { attackDamage, speedDamage } = monster.roarAndAttack();
+    return this.hero.isAliveAfterAttack(attackDamage, speedDamage, monster.getName());
+  }
+
+
+  public startFight(): void {
+    this.welcomeMessage(this.rooms.length);
+
+    this.rooms.forEach((room: Room) => {
+      const isHeroFirst = this.hero.isHeroFirstAndGreeting(room.name, room.monsters[0].getSpeed());
+
+      while (room.monsters.length) {
+        if (isHeroFirst) {
+          const isMonsterAliveOrCloned = this.heroAttacksMonster(room.monsters[0]);
+
+          if (isMonsterAliveOrCloned === false) {
+            room.killMonster(room.monsters[0]);
+            if (!room.monsters.length) {
+              this.hero.enhanceWithItem(room.item.getAttributes());
+              continue;
+            }
+          } else {
+            const isHeroStillAlive = this.monsterAttacksHero(room.monsters[0]);
+            if (!isHeroStillAlive) break;
+
+            if (room.monsters.length > 1) {
+              room.monsters = room.monsters.reverse();
+            } else if (isMonsterAliveOrCloned instanceof Monster) {
+              room.monsters = [isMonsterAliveOrCloned, room.monsters[0]];
+            }
+          }
+        } else {
+          const isHeroStillAlive = this.monsterAttacksHero(room.monsters[0]);
+          if (!isHeroStillAlive) break;
+
+          const isMonsterAliveOrCloned = this.heroAttacksMonster(room.monsters[0]);
+
+          if (isMonsterAliveOrCloned === false) {
+            room.killMonster(room.monsters[0]);
+            if (!room.monsters.length) {
+              this.hero.enhanceWithItem(room.item.getAttributes());
+              continue;
+            }
+          } else {
+            if (room.monsters.length > 1) {
+              room.monsters = room.monsters.reverse();
+            } else if (isMonsterAliveOrCloned instanceof Monster) {
+              room.monsters = [isMonsterAliveOrCloned, room.monsters[0]];
+            }
+          }
+        }
+      }
+    });
+  }
+}
