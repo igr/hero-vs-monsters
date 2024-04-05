@@ -1,6 +1,4 @@
-import { Item } from "./basics.entity";
-import { Hero } from "./hero.entity";
-import { Monster } from "./monster.entity";
+import { Item, Monster } from "./";
 
 export class Room {
   public name: string;
@@ -17,9 +15,12 @@ export class Room {
     this.item = item;
   }
 
-  public takeOutMonster(monster: Monster) {
-    // console.log('removing monster', monster.name);
+  public killMonster(monster: Monster) {
     const index = this.monsters.indexOf(monster);
     this.monsters.splice(index, 1);
+  }
+
+  public pickItem(): Item {
+    return this.item;
   }
 };

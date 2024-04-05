@@ -1,5 +1,6 @@
 
 import { Player } from "./basics.entity";
+import { MonsterAttributes } from "./types";
 
 export class Monster extends Player {
   private cloneableHealth: number;
@@ -7,11 +8,11 @@ export class Monster extends Player {
   private cloneable: boolean;
   public isClone: boolean = false;
 
-  constructor(attackDamage: number, health: number, speed: number, speedDamage: number, name: string, cloneable: boolean) {
-    super(attackDamage, health, speed, name);
-    this.speedDamage = speedDamage;
+  constructor(input: MonsterAttributes) {
+    super(input);
+    this.speedDamage = input.speedDamage;
     this.cloneableHealth = 0.25 * this.health;
-    this.cloneable = cloneable;
+    this.cloneable = input.cloneable;
   }
 
   public roarAndAttack() {
@@ -35,6 +36,7 @@ export class Monster extends Player {
     };
 
     let letters = ['H', 'W', 'l', 'R', 'O', 'A'];
+
     while (letters.length) {
       const randomElement = letters[Math.floor(Math.random() * letters.length)];
       const repeatCount: number = letterRepeatMap[randomElement]();
@@ -44,13 +46,10 @@ export class Monster extends Player {
 
     console.log(`Monster ${this.name} attacks: ${roar}`);
 
-    return {
-      attackDamage: this.attackDamage,
-      speedDamage: this.speedDamage,
-    };
+    return { attackDamage: this.attackDamage, speedDamage: this.speedDamage, };
   }
 
-  public takeHitAndContinue(attackDamage: number): boolean | Monster {
+  public isAliveOrCLonedAfterAttack(attackDamage: number): boolean | Monster {
     this.health -= attackDamage;
 
     if (this.cloneable && this.health < this.cloneableHealth && this.health > 0) {
@@ -64,10 +63,17 @@ export class Monster extends Player {
     console.log("Cloning monster!", this.name);
     if (!this.cloneable) throw Error('Monster could not be cloned!');
     this.health = 0.5 * this.health;
-    const cloned = new Monster(this.attackDamage, this.health, this.speed, this.speedDamage, `${this.name} clone`, false);
-    cloned.isClone = true;
-    console.log("Monster cloned!", this.name, this.cloneable, this.cloneableHealth, this.isClone);
 
+    const cloned = new Monster({
+      attackDamage: this.attackDamage,
+      health: this.health,
+      speed: this.speed,
+      name: `${this.name} clone`,
+      speedDamage: this.speedDamage,
+      cloneable: false
+    });
+    cloned.isClone = true;
+    console.log("Monster cloned!", cloned.name, cloned.cloneableHealth, cloned.isClone);
     return cloned;
   }
 };
