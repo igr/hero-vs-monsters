@@ -1,11 +1,12 @@
 import { join } from 'node:path';
 import { readFileSync } from 'node:fs';
 import { Item, Hero, Maze, Monster, Room } from './entities';
+import { logger } from "./logger";
 
 
-console.log("🚀🚀🚀 Initializing hero-vs-monsters in Node.js + Typescript");
+logger("🚀🚀🚀 Initializing hero-vs-monsters in Node.js + Typescript");
 
-const testFilePath = join(__dirname, '/test/game1.txt');
+const testFilePath = join(__dirname, '/input/game1.txt');
 const file = readFileSync(testFilePath, { encoding: 'utf8' });
 const input = file.split(/\r?\n/);
 
@@ -24,6 +25,7 @@ const roomsInput = input.slice(1, input.length);
 
 roomsInput.forEach((row) => {
   const elements = row.split(',');
+  if (elements.length !== 11) return;
 
   const monster = new Monster({
     name: elements[1],

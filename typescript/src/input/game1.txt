@@ -2,3 +2,4 @@ Beorn,240,10,20
 Hallway,Haunthand,20,6,40,8,false,Sword,0,4,5
 Dark Room,Helltree,30,10,5,24,false,Shield,5,0,10
 Tower,Red Dragon,50,40,200,100,true,Gold,0,0,0
+

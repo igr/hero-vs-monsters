@@ -1,7 +1,7 @@
 
 import { Player } from './basics.entity';
-import { PlayerAttributes } from './types';
-
+import { PlayerAttributes } from '../types';
+import { logger } from "../logger";
 
 export class Hero extends Player {
   constructor(input: PlayerAttributes) {
@@ -9,7 +9,7 @@ export class Hero extends Player {
   }
 
   public attack(monsterName: string): number {
-    console.log(`Hero ${this.name} fights ${monsterName}`);
+    logger(`Hero ${this.name} fights ${monsterName}`);
     return this.attackDamage;
   }
 
@@ -17,30 +17,27 @@ export class Hero extends Player {
     return this.speed > monsterSpeed;
   }
 
-  public isHeroFirstAndGreeting(roomName: string, monsterSpeed: number): boolean {
-    console.log("------------------------------------------------------------");
-    console.log(`Hero ${this.name} enters ${roomName} room!`);
-    return this.isHeroFirst(monsterSpeed);
+  public entersRoomMessage(roomName: string) {
+    logger("------------------------------------------------------------");
+    logger(`Hero ${this.name} enters ${roomName} room!`);
+    logger("------------------------------------------------------------");
   }
 
-  public enhanceWithItem(input: PlayerAttributes): void {
-    console.log(`Hero ${this.name} founds ${input.name}`);
-    this.attackDamage += input.attackDamage;
-    this.health += input.health;
-    this.speed += input.speed;
+  public pickUpItem(item: PlayerAttributes): void {
+    logger(`Hero ${this.name} wins the battle`);
+    logger(`Hero ${this.name} founds ${item.name}`);
+    this.attackDamage += item.attackDamage;
+    this.health += item.health;
+    this.speed += item.speed;
   }
 
-  private heroLostMessage(monsterName: string): void {
-    console.log("------------------------------------------------------------");
-    console.log(`Hero ${this.name} lost the match! => Monster ${monsterName} wins!`);
-    console.log("------------------------------------------------------------");
-  }
-
-  public isAliveAfterAttack(attackDamage: number, speedDamage: number, monsterName: string): boolean {
+  public isAliveAfterAttack(attackDamage: number, speedDamage: number): boolean {
     this.health -= attackDamage;
     this.speed -= speedDamage;
-    const isAlive = this.isAlive();
-    if (!isAlive) this.heroLostMessage(monsterName);
-    return isAlive;
+
+    if (this.isAlive()) return true;
+
+    this.playerDiedMessage();
+    return false;
   };
 }
