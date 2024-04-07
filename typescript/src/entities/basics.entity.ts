@@ -1,6 +1,7 @@
-import { PlayerAttributes } from "./types";
+import { PlayerAttributes } from "../types";
+import { logger } from "../logger";
 
-export class Attributes {
+export abstract class Attributes {
   protected attackDamage: number;
   protected health: number;
   protected speed: number;
@@ -22,22 +23,7 @@ export class Attributes {
   }
 }
 
-export class Item extends Attributes {
-  constructor(input: PlayerAttributes) {
-    super(input);
-  }
-
-  public getAttributes(): PlayerAttributes {
-    return {
-      attackDamage: this.attackDamage,
-      health: this.health,
-      speed: this.speed,
-      name: this.name
-    };
-  }
-}
-
-export class Player extends Attributes {
+export abstract class Player extends Attributes {
   constructor(input: PlayerAttributes) {
     super(input);
   }
@@ -46,7 +32,11 @@ export class Player extends Attributes {
     return this.health <= 0 ? false : true;
   }
 
+  public playerDiedMessage(): void {
+    logger(`${this.constructor.name} ${this.name} is dead!`);
+  }
+
   public winsTheBattle(): void {
-    console.log(`${this.constructor.name} ${this.name} wins!`);
+    logger(`🚀🚀🚀 ${this.constructor.name} ${this.name} wins! 🚀🚀🚀`);
   }
 }

@@ -1,24 +1,37 @@
-TODO:
+# Hero vs Monsters (Node.js + Typescript)
 
-# Hero vs Monsters
+## Prerequisites 
+To start app you need to have node.js installed on your system trough terminal.
 
-This repository contains the list of different solutions of the same problem, described below. Its goal is to showcase a variety of programming styles, languages, methodologies, and patterns, and to compare them.
+Suggested version of node.js is v20, but it should work ok with v16+.
 
-Each subfolder must be a complete solution, with its own build system. The only common part is the problem description.
+Let's test if node works on your terminal with command:
 
-While this is a minor problem, feel free to express your ideas and demonstrate your principles. For example, if you have a separate module with only one file, that's perfectly acceptable here since our focus is to provide an illustrative example.
+`node -v`
 
-You are welcome to add more implementations, or enhance existing ones. It's perfectly fine to have multiple implementations in the same language, provided they're sufficiently distinct.
+if your output is something similar like below, we are good to continue.
 
-We encourage you to add as many comments to your code as possible to make it easier to understand. Our aim is to learn from each other and compare different approaches.
+> v20.12.1 (v16.x.x/v18.x.x/v20.x.x)
 
-## Implementations
+## Start node.js app
 
-- [Procedural Programming, Kotlin](pp-kotlin/README.md) by @igr
-- [Object Oriented Programming, Java](simple-oop-java/README.md) by @igr
-- [C# implementation](c-sharp-extensions/README.md) by @milosmisic
-- [Go](go/README.md) by @mdelapenya
-- [Typescript](typescript/README.md) by @jovanc
+To start app follow next 2 commands, that will install all dependencies and start game
+
+`npm install`
+
+`npm start`
+
+Like this, game will start with default input from file located in `input/game1.txt` 
+
+Change this file with rules below to change game
+
+```
+<Hero>,<health>,<attack>,<speed>
+<Room A>,<Monster A>,<health>,<attack>,<speed>,<speed damage>,<clonable>,<Item A>,<health>,<attack>,<speed>
+<Room B>,<Monster B>,<health>,<attack>,<speed>,<speed damage>,<clonable>,<Item B>,<health>,<attack>,<speed>
+```
+
+# Details about game and task requests are below!
 
 ## 🤴⚔️😈 The problem
 

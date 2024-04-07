@@ -1,9 +1,10 @@
+import { PlayerAttributes } from "../types";
 import { Item, Monster } from "./";
 
 export class Room {
   public name: string;
   public monsters: Monster[];
-  public item: Item;
+  private item: Item;
 
   constructor(
     name: string,
@@ -20,7 +21,27 @@ export class Room {
     this.monsters.splice(index, 1);
   }
 
-  public pickItem(): Item {
-    return this.item;
+  /**
+   * Initial guess is there will be max 2 monsters, so after each turn we revers order
+   * Like that first monster should be on turn to fight
+   */
+  public changeMonstersFightOrder() {
+    this.monsters = this.monsters.reverse();
+  }
+
+  public addMonster(clone: Monster) {
+    this.monsters.push(clone);
+  }
+
+  public numberOfMonsters(): number {
+    return this.monsters.length;
+  }
+
+  public monsterOnTurn() {
+    return this.monsters[0];
+  }
+
+  public getItem(): PlayerAttributes {
+    return this.item.getAttributes();
   }
 };

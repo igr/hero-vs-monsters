@@ -1,8 +1,10 @@
 import { Hero, Monster, Room } from "./";
+import { logger } from "../logger";
+
 
 export class Maze {
-  public rooms: Room[] = [];
-  public hero: Hero;
+  private rooms: Room[] = [];
+  private hero: Hero;
 
   constructor(hero: Hero) {
     this.hero = hero;
@@ -13,13 +15,16 @@ export class Maze {
   }
 
   private welcomeMessage(numberOfRooms: number): void {
-    console.log("------------------------------------------------------------");
-    console.log("Welcome to the monsters vs hero battle");
-    console.log(`Maze has ${numberOfRooms} rooms with different monsters`);
-    console.log("Let's start the fight!");
+    logger("------------------------------------------------------------");
+    logger("Welcome to the monsters vs hero battle");
+    logger(`Maze has ${numberOfRooms} rooms with different monsters`);
+    logger("Let's start the fight!");
   }
 
-
+  /**
+   * @param monster 
+   * @returns Cloned monster instance or boolean for isAlive status 
+   */
   private heroAttacksMonster(monster: Monster): boolean | Monster {
     const attackDamage = this.hero.attack(monster.getName());
     return monster.isAliveOrCLonedAfterAttack(attackDamage);
@@ -27,57 +32,60 @@ export class Maze {
 
   private monsterAttacksHero(monster: Monster): boolean {
     const { attackDamage, speedDamage } = monster.roarAndAttack();
-    return this.hero.isAliveAfterAttack(attackDamage, speedDamage, monster.getName());
+    return this.hero.isAliveAfterAttack(attackDamage, speedDamage);
   }
 
 
   public startFight(): void {
     this.welcomeMessage(this.rooms.length);
 
-    this.rooms.forEach((room: Room) => {
-      const isHeroFirst = this.hero.isHeroFirstAndGreeting(room.name, room.monsters[0].getSpeed());
+    for (const room of this.rooms) {
+      this.hero.entersRoomMessage(room.name);
+      const isHeroFirst = this.hero.isHeroFirst(room.monsterOnTurn().getSpeed());
 
-      while (room.monsters.length) {
+      while (room.numberOfMonsters() > 0) {
         if (isHeroFirst) {
-          const isMonsterAliveOrCloned = this.heroAttacksMonster(room.monsters[0]);
+          //** Hero first hits
+          const isMonsterAliveOrCloned = this.heroAttacksMonster(room.monsterOnTurn());
+          if (isMonsterAliveOrCloned instanceof Monster) room.addMonster(isMonsterAliveOrCloned);
 
           if (isMonsterAliveOrCloned === false) {
-            room.killMonster(room.monsters[0]);
-            if (!room.monsters.length) {
-              this.hero.enhanceWithItem(room.item.getAttributes());
+            room.killMonster(room.monsterOnTurn());
+            if (room.numberOfMonsters() === 0) {
+              this.hero.pickUpItem(room.getItem());
               continue;
             }
           } else {
-            const isHeroStillAlive = this.monsterAttacksHero(room.monsters[0]);
-            if (!isHeroStillAlive) break;
-
-            if (room.monsters.length > 1) {
-              room.monsters = room.monsters.reverse();
-            } else if (isMonsterAliveOrCloned instanceof Monster) {
-              room.monsters = [isMonsterAliveOrCloned, room.monsters[0]];
+            const isHeroStillAlive = this.monsterAttacksHero(room.monsterOnTurn());
+            if (!isHeroStillAlive) {
+              room.monsterOnTurn().winsTheBattle();
+              break;
             }
           }
+
+          room.changeMonstersFightOrder();
         } else {
-          const isHeroStillAlive = this.monsterAttacksHero(room.monsters[0]);
-          if (!isHeroStillAlive) break;
-
-          const isMonsterAliveOrCloned = this.heroAttacksMonster(room.monsters[0]);
+          //** Monster first hits
+          const isHeroStillAlive = this.monsterAttacksHero(room.monsterOnTurn());
+          if (!isHeroStillAlive) {
+            room.monsterOnTurn().winsTheBattle();
+            break;
+          }
+          const isMonsterAliveOrCloned = this.heroAttacksMonster(room.monsterOnTurn());
+          if (isMonsterAliveOrCloned instanceof Monster) room.addMonster(isMonsterAliveOrCloned);
 
           if (isMonsterAliveOrCloned === false) {
-            room.killMonster(room.monsters[0]);
+            room.killMonster(room.monsterOnTurn());
             if (!room.monsters.length) {
-              this.hero.enhanceWithItem(room.item.getAttributes());
+              this.hero.pickUpItem(room.getItem());
               continue;
             }
-          } else {
-            if (room.monsters.length > 1) {
-              room.monsters = room.monsters.reverse();
-            } else if (isMonsterAliveOrCloned instanceof Monster) {
-              room.monsters = [isMonsterAliveOrCloned, room.monsters[0]];
-            }
           }
+          room.changeMonstersFightOrder();
         }
       }
-    });
+    }
+
+    if (this.hero.isAlive()) this.hero.winsTheBattle();
   }
 }
